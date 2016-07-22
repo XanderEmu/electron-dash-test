@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Hello World!</title>
+</head>
+<body>
+    <h1>Hello World!</h1>
+    We are using node <script>document.write(process.versions.node)</script>,
+    Chrome <script>document.write(process.versions.chrome)</script>,
+    and Electron <script>document.write(process.versions.electron)</script>.
+
+    <video controls
+        style="max-width: 640px; max-height: 480px;"
+    ></video>
+
+    <script src="../../../node_modules/dashjs/dist/dash.all.debug.js"></script>
+
+    <script type="application/javascript">
+        const video = document.querySelector('video');
+
+        // Figure A: This makes it work (at least on mac)
+        navigator.plugins.item();
+
+        const player = dashjs.MediaPlayer().create();
+        player.on(dashjs.MediaPlayer.events.ERROR, console.error.bind(this, 'dashjs: '));
+
+        const protectionData = {
+            'com.widevine.alpha': {
+                'httpRequestHeaders': {},
+                'serverURL': 'http://widevine-proxy.appspot.com/proxy'
+            }
+        };
+
+        player.initialize();
+        player.attachView(video);
+
+        player.setProtectionData(protectionData);
+        player.attachSource(
+            'http://storage.googleapis.com/shaka-demo-assets/sintel-widevine/dash.mpd'
+        );
+
+        player.play();
+
+    </script>
+</body>
+</html>
